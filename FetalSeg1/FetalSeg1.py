@@ -2,7 +2,7 @@ from skimage import io, filters, exposure
 from skimage.morphology import disk
 import numpy as np
 
-pInputImage = io.imread("F:\\PhD_Data\\Normal\\BMP\\TMIPMP\\All\\M_20120209171718.bmp")
+pInputImage = io.imread("F:\\ISBI_Challenge\\FetalSeg1\\femur-01.jpg")
 
 pMedFiltImg = filters.median(pInputImage,disk(5))
 
@@ -22,8 +22,9 @@ for i in xrange(0,255,1):
     PB = sum(pProb[i+1:256]) + np.spacing(1)
     H[0,i] = -np.log10(PA)-np.log10(PB)-(HA/(PA))-(HB/(PB))
 
-print H.argmin(1)
-#io.imshow(pInputImage)
-#io.show()
-#io.imshow(pMedFiltImg)
-#io.show()
+nThre = H.argmax(1)
+
+pInputImage[pInputImage<nThre] = 0
+pInputImage[pInputImage>=nThre] = 255
+io.imshow(pInputImage)
+io.show()
